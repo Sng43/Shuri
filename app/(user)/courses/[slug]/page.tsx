@@ -6,13 +6,24 @@ import { auth } from "@clerk/nextjs/server";
 import { ArrowLeft, BookOpen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
 
 interface CoursePageProps {
   params: Promise<{
     slug: string;
   }>;
 }
+
+interface Lesson {
+  _id: string;
+  title: string;
+}
+
+interface Module {
+  _id: string;
+  title: string;
+  lessons: Lesson[];
+}
+
 
 export default async function CoursePage({ params }: CoursePageProps) {
   const { slug } = await params;
@@ -88,18 +99,15 @@ if (!course) {
               <div className="bg-card rounded-lg p-6 mb-8 border border-border">
                 <h2 className="text-2xl font-bold mb-4">Course Content</h2>
                 <div className="space-y-4">
-                {course.modules?.map((module: { _id: Key | null | undefined; title: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | Iterable<ReactNode> | null | undefined; lessons: any[]; }, index: number) => (
-                  <div
-                    key={module._id}
-                    className="border border-border rounded-lg"
-                  >
+                {course.modules?.map((module: Module, index: number) => (
+                  <div key={module._id} className="border border-border rounded-lg">
                     <div className="p-4 border-b border-border">
                       <h3 className="font-medium">
                         Module {index + 1}: {module.title}
                       </h3>
                     </div>
                     <div className="divide-y divide-border">
-                      {module.lessons?.map((lesson, lessonIndex) => (
+                      {module.lessons?.map((lesson: Lesson, lessonIndex: number) => (
                         <div
                           key={lesson._id}
                           className="p-4 hover:bg-muted/50 transition-colors"
@@ -110,9 +118,7 @@ if (!course) {
                             </div>
                             <div className="flex items-center gap-3 text-foreground">
                               <BookOpen className="h-4 w-4 text-muted-foreground" />
-                              <span className="font-medium">
-                                {lesson.title}
-                              </span>
+                              <span className="font-medium">{lesson.title}</span>
                             </div>
                           </div>
                         </div>
@@ -120,6 +126,7 @@ if (!course) {
                     </div>
                   </div>
                 ))}
+
                 </div>
               </div>
             </div>

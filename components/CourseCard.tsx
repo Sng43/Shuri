@@ -1,13 +1,23 @@
 "use client";
 
-import { GetCoursesQueryResult } from "@/sanity.types";
 import { urlFor } from "@/sanity/lib/image";
 import { BookOpen, Loader } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { CourseProgress } from "./CourseProgress";
+import {
+  GetCoursesQueryResult,
+  GetEnrolledCoursesQueryResult,
+} from "@/sanity.types";
+
+
 
 interface CourseCardProps {
-  course: GetCoursesQueryResult[number];
+  course:
+    | GetCoursesQueryResult[number]
+    | NonNullable<
+        NonNullable<GetEnrolledCoursesQueryResult>["enrolledCourses"][number]["course"]
+      >;
   progress?: number;
   href: string;
 }
@@ -86,14 +96,14 @@ export function CourseCard({ course, progress, href }: CourseCardProps) {
               </div>
             )}
             {/* ProgressBar */}
-            {/* {typeof progress === "number" && (
+            {typeof progress === "number" && (
               <CourseProgress
                 progress={progress}
                 variant="default"
                 size="sm"
                 label="Course Progress"
               />
-            )} */}
+            )}
           </div>
           </div>
     </div>

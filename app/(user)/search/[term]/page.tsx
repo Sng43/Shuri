@@ -36,7 +36,9 @@ export default async function SearchPage({ params }: SearchPageProps) {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {courses.map((course) => (
+            {courses.map(
+              // @ts-expect-error: Ignoring implicit any error for course parameter
+              (course) => (
               <CourseCard
                 key={course._id}
                 course={course}

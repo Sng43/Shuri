@@ -7,6 +7,18 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import React from 'react'
 
+interface Course {
+  _id: string;
+  title: string;
+  description?: string;
+  image?: string;
+  price?: number;
+  category?: {
+    name: string;
+  };
+}
+
+
 export default async function MyCoursesPage() {
     const user = await currentUser()
     
@@ -18,16 +30,17 @@ export default async function MyCoursesPage() {
     const enrolledCourses = await getEnrolledCourses(user.id);
 
       // Get progress for each enrolled course
-        const coursesWithProgress = await Promise.all(
-          enrolledCourses.map(async ({ course }: { course: any }) => {
-            if (!course) return null;
-            const progress = await getCourseProgress(user.id, course._id);
-            return {
-              course,
-              progress: progress.courseProgress,
-            };
-          })
-        );
+      const coursesWithProgress = await Promise.all(
+        enrolledCourses.map(async ({ course }: { course: Course }) => {
+          if (!course) return null;
+          const progress = await getCourseProgress(user.id, course._id);
+          return {
+            course,
+            progress: progress.courseProgress,
+          };
+        })
+      );
+      
 
 
   return (
