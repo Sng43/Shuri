@@ -1153,6 +1153,7 @@ export type EnrollmentQueryResult = {
 
 // Query TypeMap
 import "@sanity/client";
+// @ts-expect-error: Invalid module name in augmentation, module '@sanity/client' cannot be found
 declare module "@sanity/client" {
   interface SanityQueries {
     "*[_type == \"course\" && _id == $id][0] {\n      ...,  // Spread all course fields\n      \"category\": category->{...},  // Expand the category reference, including all its fields\n      \"instructor\": instructor->{...},  // Expand the instructor reference, including all its fields\n      \"modules\": modules[]-> {  // Expand the array of module references\n        ...,  // Include all module fields\n        \"lessons\": lessons[]-> {...}  // For each module, expand its array of lesson references\n      }\n    }": GetCourseByIdQueryResult;
